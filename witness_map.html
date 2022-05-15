@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>목격 상황</title>
+</head>
+<body>
+	<div id="map" style="width:100%;height:100vh;"></div>
+
+	<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ab4854c69588d0678952e8bd37b220ad&libraries=clusterer"></script>
+	<script>
+		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+		    mapOption = {
+		        center: new kakao.maps.LatLng(37.566905284105076, 126.97860695940814), // 지도의 중심좌표
+		        level: 9, // 지도의 확대 레벨
+		        mapTypeId : kakao.maps.MapTypeId.ROADMAP // 지도종류
+		    }; 
+
+		// 지도를 생성한다 
+		var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        // 마커 클러스터러를 생성합니다 
+        var clusterer = new kakao.maps.MarkerClusterer({
+            map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
+            averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
+            minLevel: 10 // 클러스터 할 최소 지도 레벨 
+        });
+
+        var 데이터 = [
+            [37.58935656243591,127.01670630188814,'<div style="padding">message</div>'],
+            [37.48481209316393,127.0086467777474,'<div style="padding">message</div>'],
+            [37.49659249981454,126.98825900359107,'<div style="padding">message</div>'],
+            [37.477945781521775,126.95151012070137,'<div style="padding">message</div>'],
+            [37.62335677888941,126.92381324460057,'<div style="padding">message</div>'],
+            [37.56635853830641,126.90327644308076,'<div style="padding">message</div>'],
+            [37.58164872514499,126.8883182153384,'<div style="padding">message</div>'],
+            [37.559323196371906,126.84029851396139,'<div style="padding">message</div>'],
+            [37.55051746791423,126.83166012179105,'<div style="padding">message</div>'],
+            [37.54022329385234,126.83627433840618,'<div style="padding">message</div>'],
+            [37.53234152452197,126.84612046117208,'<div style="padding">message</div>'],
+            [37.49452953684407,126.889103943358,'<div style="padding">message</div>'],
+            [37.56012874091611,127.01318269165029,'<div style="padding">message</div>'],
+            [37.56531437904734,127.00886547237072,'<div style="padding">message</div>']
+
+        ]
+
+        var markers= [];
+        for (var i=0; i<데이터.length; i++) {
+            // 지도에 마커를 생성하고 표시한다
+            var marker = new kakao.maps.Marker({
+                position: new kakao.maps.LatLng(데이터[i][0], 데이터[i][1]),
+                map: map // 마커를 표시할 지도 객체
+            });
+
+            // var iwContent = '<div style="padding:5px;">Hello World! <br><a href="https://map.kakao.com/link/map/Hello World!,33.450701,126.570667" style="color:blue" target="_blank">큰지도보기</a> <a href="https://map.kakao.com/link/to/Hello World!,33.450701,126.570667" style="color:blue" target="_blank">길찾기</a></div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+            var iwContent = '<div style="padding">message</div>'
+            
+
+            // 인포윈도우를 생성합니다
+            var infowindow = new kakao.maps.InfoWindow({
+                // position : iwPosition, 
+                content : 데이터[i][2] 
+            });
+    
+            markers.push(marker);
+            kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+            kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+        }
+        // 클러스터에 마커들을 추가하기
+        clusterer.addMarkers(markers);
+
+        // 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
+        function makeOverListener(map, marker, infowindow) {
+            return function() {
+                infowindow.open(map, marker);
+            };
+        }
+
+        // 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+        function makeOutListener(infowindow) {
+            return function() {
+                infowindow.close();
+            };
+        }
+	</script>
+</body>
+</html>
+
+<!-- 37.5563171912353,126.972000585834 -->
